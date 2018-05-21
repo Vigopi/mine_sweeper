@@ -13,11 +13,17 @@ class Board extends StatefulWidget{
   }
 }
 
+enum Hardness { easy, medium, hard }
+
 class BoardState extends State<Board>{
 
-  final int rows = 9;
-  final int cols = 9;
-  final int numOfMines = 3;
+  Hardness hardness = Hardness.hard;
+
+  String hardnessText = "Hard";
+
+  int rows = 9;
+  int cols = 9;
+  int numOfMines = 3;
 
   List<List<TileState>> uiState;
   List<List<bool>> tiles;
@@ -42,6 +48,23 @@ class BoardState extends State<Board>{
     minesFound = 0;
     stopwatch.reset();
 
+    if(hardness == Hardness.easy) {
+      numOfMines = 3;
+      rows = 4;
+      cols = 4;
+    }
+    else if (hardness == Hardness.medium)
+    {
+      numOfMines = 6;
+      rows = 6;
+      cols = 6;
+    }
+    else if(hardness == Hardness.hard)
+    {
+      numOfMines = 9;
+      rows = 8;
+      cols = 8;
+    }
     timer?.cancel();
     timer = Timer.periodic(Duration(seconds: 1),(Timer timer){
       setState(() {
@@ -179,7 +202,7 @@ class BoardState extends State<Board>{
                             : " You've Lost: $timeElasped seconds"
 
                   ),
-                  
+
                 ),
               ),
             ],
@@ -189,7 +212,33 @@ class BoardState extends State<Board>{
       body: Container(
         color: Colors.white,
         child: Center(
-          child: buildBoard(),
+          child: Column(
+            children: <Widget>[
+              buildBoard(),
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(hardnessText),
+                    color: Colors.blueAccent,
+                    onPressed: (){
+                      setState(() {
+                        if(hardness == Hardness.easy){
+                          hardness = Hardness.hard;
+                          hardnessText = "Hard";
+                        }
+                        else if(hardness == Hardness.hard){
+                          hardness = Hardness.easy;
+                          hardnessText = "Easy";
+                        }
+                        resetBoard();
+                      });
+
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -236,12 +285,15 @@ class BoardState extends State<Board>{
     if(!alive)
       return;
     setState(() {
+
       if(uiState[y][x] == TileState.flagged){
         uiState[y][x] = TileState.covered;
+        if(tiles[y][x])
         --minesFound;
       }
       else{
         uiState[y][x] = TileState.flagged;
+        if(tiles[y][x])
         ++minesFound;
       }
     });

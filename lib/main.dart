@@ -12,6 +12,7 @@ class MineSweeper extends StatelessWidget{
     return new MaterialApp(
       title: "Mine Sweeper",
       home: Board(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
