@@ -5,6 +5,14 @@ import 'package:mine_sweeper/main.dart';
 import 'dart:math';
 import 'covered_mini_tile.dart';
 import 'open_mine_tile.dart';
+import '../utils/audio.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+
+//import '../utils/app_id.dart' show APP_ID;
+
+const String APP_ID = 'ca-app-pub-6530126704027329~8724032630';
+const String BANNER_AD_UNIT_ID = 'ca-app-pub-6530126704027329/3028852821';
+const String INTERSTITIAL_AD_UNIT_ID = 'ca-app-pub-6530126704027329/1256606154';
 
 class Board extends StatefulWidget{
   @override
@@ -13,9 +21,45 @@ class Board extends StatefulWidget{
   }
 }
 
+final String FLAG = "flag.mp3";
+final String WIN = "win.mp3";
+final String LOSS = "loss.mp3";
+
 enum Hardness { easy, medium, hard }
 
 class BoardState extends State<Board>{
+
+  static final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: ['Games','Puzzles'],
+    testDevices: APP_ID != null ? [APP_ID] : null
+  );
+
+  BannerAd bannerAd;
+  InterstitialAd interstitialAd;
+
+  BannerAd buildBanner(){
+    return BannerAd(
+      adUnitId: BANNER_AD_UNIT_ID,
+      size: AdSize.banner,
+      listener: (MobileAdEvent event){
+        //if(event == MobileAdEvent.loaded)
+         // bannerAd..show();
+        print(event);
+      }
+    );
+  }
+
+  InterstitialAd buildInterstitialAd(){
+    return InterstitialAd(
+      adUnitId: INTERSTITIAL_AD_UNIT_ID,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event){
+        print(event);
+      }
+    );
+  }
+
+  AudioPlay audio;
 
   Hardness hardness = Hardness.hard;
 
@@ -38,6 +82,8 @@ class BoardState extends State<Board>{
   @override
   void dispose() {
     timer?.cancel();
+    bannerAd?.dispose();
+    interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -95,8 +141,13 @@ class BoardState extends State<Board>{
   @override
   void initState() {
     // TODO: implement initState
+    audio = new AudioPlay();
     resetBoard();
     super.initState();
+
+    FirebaseAdMob.instance.initialize(appId: APP_ID);
+    bannerAd = buildBanner()..load();
+    interstitialAd = buildInterstitialAd()..load();
   }
 
   Widget buildBoard(){
@@ -119,11 +170,30 @@ class BoardState extends State<Board>{
         if(state == TileState.covered || state == TileState.flagged){
           rowChildren.add(GestureDetector(
             onLongPress: (){
+              if(alive) {
+                if (audio == null)
+                  audio = new AudioPlay();
+                if(!tiles[y][x])
+                  audio.play(FLAG);
+                else
+                  audio.play(WIN);
+                //flagPlayer.play("http://www.rxlabz.com/labz/audio2.mp3");
+              }
               flag(x, y);
             },
             onTap: (){
-             if(state == TileState.covered)
-                probe(x, y);
+             if(state == TileState.covered){
+               if(alive) {
+                 if (audio == null)
+                   audio = new AudioPlay();
+                 if (!tiles[y][x])
+                   audio.play(FLAG);
+                 else
+                   audio.play(LOSS);
+               }
+               probe(x, y);
+             }
+
             },
             child: Listener(
               child: CoveredMineTile(
@@ -168,6 +238,9 @@ class BoardState extends State<Board>{
   @override
   Widget build(BuildContext context) {
     int timeElasped = stopwatch.elapsedMilliseconds ~/1000;
+    double position =0.0;
+
+    bannerAd..load()..show();
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -183,7 +256,10 @@ class BoardState extends State<Board>{
                   "Reset Game",
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: ()=> resetBoard(),
+                onPressed: (){
+                  resetBoard();
+                  interstitialAd..load()..show();
+                },
                 highlightColor: Colors.green,
                 splashColor: Colors.redAccent,
                 shape: StadiumBorder(
@@ -217,24 +293,7 @@ class BoardState extends State<Board>{
               buildBoard(),
               Row(
                 children: <Widget>[
-                  MaterialButton(
-                    child: Text(hardnessText),
-                    color: Colors.blueAccent,
-                    onPressed: (){
-                      setState(() {
-                        if(hardness == Hardness.easy){
-                          hardness = Hardness.hard;
-                          hardnessText = "Hard";
-                        }
-                        else if(hardness == Hardness.hard){
-                          hardness = Hardness.easy;
-                          hardnessText = "Easy";
-                        }
-                        resetBoard();
-                      });
 
-                    },
-                  ),
                 ],
               ),
             ],
@@ -315,7 +374,6 @@ class BoardState extends State<Board>{
   int bombs(int x,int y) => inBoard(x, y) && tiles[y][x] ? 1 : 0;
 
   bool inBoard(int x,int y) => x >= 0 && x < cols && y >= 0 && y < rows;
-
 
 }
 
