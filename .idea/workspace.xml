@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="86150f9f-f50b-4c24-b7ca-18b283a59cea" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -53,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="338">
-              <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+              <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -507,7 +506,14 @@
       <option name="project" value="LOCAL" />
       <updated>1527223771542</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="App Icon updated,&#10;App label modified">
+      <created>1527225299061</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1527225299061</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -558,7 +564,8 @@
     <MESSAGE value="Application finished, needs UI improvement,&#10;Resolved Flag issue" />
     <MESSAGE value="Added sound clips for game play,&#10;   flag.mp3&#10;   win.mp3&#10;   loss.mp3&#10;Added Admob ads&#10;   Banner ad at the bottom of main screen&#10;   and &#10;   Interstitial ad when resetting the game using ResetGame button" />
     <MESSAGE value="Added rules,&#10;Added flash screen,&#10;Added status," />
-    <option name="LAST_COMMIT_MESSAGE" value="Added rules,&#10;Added flash screen,&#10;Added status," />
+    <MESSAGE value="App Icon updated,&#10;App label modified" />
+    <option name="LAST_COMMIT_MESSAGE" value="App Icon updated,&#10;App label modified" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1029,7 +1036,7 @@
     <entry file="file://$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding />
         </state>
       </provider>
