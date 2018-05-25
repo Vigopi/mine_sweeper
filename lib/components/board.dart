@@ -24,6 +24,7 @@ class Board extends StatefulWidget{
 final String FLAG = "flag.mp3";
 final String WIN = "win.mp3";
 final String LOSS = "loss.mp3";
+final String BACKGROUND = "background.wav";
 
 enum Hardness { easy, medium, hard }
 
@@ -59,7 +60,7 @@ class BoardState extends State<Board>{
     );
   }
 
-  AudioPlay audio;
+  AudioPlay audio,backgroundAudio;
 
   Hardness hardness = Hardness.hard;
 
@@ -93,6 +94,7 @@ class BoardState extends State<Board>{
     wonGame = false;
     minesFound = 0;
     stopwatch.reset();
+    stopwatch.stop();
 
     if(hardness == Hardness.easy) {
       numOfMines = 3;
@@ -142,6 +144,8 @@ class BoardState extends State<Board>{
   void initState() {
     // TODO: implement initState
     audio = new AudioPlay();
+    backgroundAudio = new AudioPlay();
+    backgroundAudio.play(BACKGROUND);
     resetBoard();
     super.initState();
 
@@ -188,8 +192,10 @@ class BoardState extends State<Board>{
                    audio = new AudioPlay();
                  if (!tiles[y][x])
                    audio.play(FLAG);
-                 else
+                 else {
                    audio.play(LOSS);
+                   //Navigator.pushNamed(context, 'lossoverlay');
+                 }
                }
                probe(x, y);
              }
@@ -257,8 +263,8 @@ class BoardState extends State<Board>{
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: (){
-                  resetBoard();
                   interstitialAd..load()..show();
+                  resetBoard();
                 },
                 highlightColor: Colors.green,
                 splashColor: Colors.redAccent,
@@ -292,8 +298,42 @@ class BoardState extends State<Board>{
             children: <Widget>[
               buildBoard(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Center(
 
+                    child: wonGame ? Text("You won",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+
+                        )
+                    ) :
+                    !alive ?  Text("You lost",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                        )
+                    )
+                        :
+                    Text("Timer: ${timeElasped}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                          Text("Rules : "),
+                          Text("Tap on a tile to Open"),
+                          Text("Long press a tile to Flag it"),
+                          Text("Flag all the mines to Win"),
                 ],
               ),
             ],

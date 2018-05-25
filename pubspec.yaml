@@ -37,6 +37,7 @@ flutter:
     - lib/sounds/flag.mp3
     - lib/sounds/win.mp3
     - lib/sounds/loss.mp3
+    - lib/sounds/background.wav
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
